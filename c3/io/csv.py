@@ -86,6 +86,30 @@ def generate_csv_row_eol_verbose(cid, writer):
                          'Location': "",
                          'Cert Type': ""})
 
+def generate_csv_row_inventory(cid, writer):
+    if cid:
+        try:
+            writer.writerow({'CID': cid.cid,
+                             'Location': cid.location,
+                             'Status': cid.status,
+                             'Account': cid.account,
+                             'Project': cid.project_name,
+                             'Canonical Label': cid.canonical_label,
+                             'Platform Name': cid.platform_name,
+                             'Code Name': cid.codename,
+                             'SKU': cid.sku,
+                             'Hardware Build': cid.hardware_build,
+                             'Form': cid.form_factor,
+                             'Canonical Contact': cid.canonical_contact,
+                             'Holder': cid.holder
+                             })
+        except AttributeError:
+            raise
+    else:
+        logger.warning("No data for {}".format(cid))
+        writer.writerow({'CID': cid['cid'],
+                         'Location': "",
+                         })
 
 def get_fieldnames(mode='submission'):
     if mode == 'submission':
@@ -103,6 +127,12 @@ def get_fieldnames(mode='submission'):
         fieldnames = ['CID', 'Location',
                       'Vendor', 'Model', 'Code Name', 'Form',
                       'CPU', 'GPU', 'Wireless', 'Cert Type']
+    elif mode == 'inventory':
+        fieldnames = ['CID', 'Location', 'Status', 'Account',
+                      'Project', 'Canonical Label',
+                      'Platform Name', 'Code Name', 'SKU',
+                      'Hardware Build', 'Form',
+                      'Canonical Contact', 'Holder']
     else:
         fieldnames = ""
 
@@ -130,6 +160,9 @@ def generate_csv(cids, csv_file, mode='submission'):
         elif mode == 'eol-verbose':
             for cid in cids:
                 generate_csv_row_eol_verbose(cid, writer)
+        elif mode == 'inventory':
+            for cid in cids:
+                generate_csv_row_inventory(cid, writer)
         else:
             for cid in cids:
                 generate_csv_row(cid, writer)
