@@ -18,5 +18,8 @@ setup(
     },
     classifiers=[
         "Programming Language :: Python",
+    ],
+    data_files=[
+        ('c3/data', ['c3/data/default.ini'])
     ]
 )
