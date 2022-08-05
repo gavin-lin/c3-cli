@@ -21,5 +21,6 @@ setup(
     ],
     data_files=[
         ('c3/data', ['c3/data/default.ini'])
-    ]
+    ],
+    zip_safe=False
 )
